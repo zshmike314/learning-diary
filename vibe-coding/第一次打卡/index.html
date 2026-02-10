@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇游戏开发文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00ff88;
+            font-size: 2.8em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .intro {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .intro h2 {
+            color: #00ff88;
+            margin-bottom: 15px;
+        }
+
+        .version-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .version-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .version-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ff88;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .version-card h3 {
+            color: #00ff88;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .version-card .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            color: #1a1a2e;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .version-card ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .version-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .version-card li:before {
+            content: "→ ";
+            color: #00ff88;
+        }
+
+        .play-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .doc-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .doc-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #aaa;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐍 贪吃蛇游戏开发文档</h1>
+
+        <div class="intro">
+            <h2>📚 项目概述</h2>
+            <p>这是一个完整的贪吃蛇游戏开发教程，记录了从基础版本到高级版本的完整进化过程。点击下方卡片可以查看每个版本的详细文档，也可以直接点击"试玩"链接体验游戏。</p>
+        </div>
+
+        <div class="version-cards">
+            <!-- 版本A -->
+            <div class="version-card">
+                <h3>📌 版本 A</h3>
+                <span class="tag">基础版本</span>
+                <ul>
+                    <li>核心游戏机制</li>
+                    <li>基本的蛇移动控制</li>
+                    <li>碰撞检测</li>
+                    <li>简单的分数显示</li>
+                    <li>基础CSS样式</li>
+                </ul>
+                <a href="version_a.html" class="doc-btn">📖 查看文档</a>
+                <a href="game_a.html" class="play-btn">🎮 试玩</a>
+            </div>
+
+            <!-- 版本B -->
+            <div class="version-card">
+                <h3>🚀 版本 B</h3>
+                <span class="tag">进阶版本</span>
+                <ul>
+                    <li><strong>第一阶段：</strong>用户体验提升</li>
+                    <li>分数显示优化</li>
+                    <li>游戏状态控制按钮</li>
+                    <li>美观的CSS界面</li>
+                    <li><strong>第二阶段：</strong>游戏机制增加</li>
+                    <li>随机障碍物系统</li>
+                    <li>特殊食物（双倍加分）</li>
+                    <li><strong>第三阶段：</strong>结构性改进</li>
+                    <li>无限/循环地图</li>
+                </ul>
+                <a href="version_b.html" class="doc-btn">📖 查看文档</a>
+                <a href="game_b.html" class="play-btn">🎮 试玩</a>
+            </div>
+
+            <!-- 版本C -->
+            <div class="version-card">
+                <h3>⭐ 版本 C</h3>
+                <span class="tag">高级版本</span>
+                <ul>
+                    <li>完整功能集成</li>
+                    <li>所有阶段优化</li>
+                    <li>平滑动画效果</li>
+                    <li>高级视觉效果</li>
+                    <li>性能优化</li>
+                    <li>响应式设计</li>
+                </ul>
+                <a href="version_c.html" class="doc-btn">📖 查看文档</a>
+                <a href="game_c.html" class="play-btn">🎮 试玩</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🎮 选择一个版本开始你的贪吃蛇游戏之旅！</p>
+        </div>
+    </div>
+</body>
+</html>

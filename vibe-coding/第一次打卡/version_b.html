@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇游戏 - 版本B（进阶版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .header h1 {
+            color: #00ff88;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .version-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #1a1a2e;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .nav-buttons {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0,255,136,0.3);
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            padding: 15px 40px;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .game-preview {
+            text-align: center;
+            margin: 30px 0;
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            color: #00ff88;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: #4facfe;
+            margin: 25px 0 15px;
+            font-size: 1.5em;
+            border-left: 4px solid #4facfe;
+            padding-left: 15px;
+        }
+
+        h4 {
+            color: #ff6b6b;
+            margin: 20px 0 10px;
+            font-size: 1.2em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #ddd;
+            line-height: 1.9;
+        }
+
+        .ai-prompt {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.2) 0%, rgba(0, 242, 254, 0.2) 100%);
+            border-left: 4px solid #4facfe;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .ai-prompt strong {
+            color: #4facfe;
+        }
+
+        .code-block {
+            background: #0d1117;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .code-block pre {
+            color: #c9d1d9;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .code-block .comment {
+            color: #8b949e;
+        }
+
+        .code-block .keyword {
+            color: #ff7b72;
+        }
+
+        .code-block .string {
+            color: #a5d6ff;
+        }
+
+        .code-block .function {
+            color: #d2a8ff;
+        }
+
+        .code-block .highlight-line {
+            background: rgba(255, 107, 107, 0.3);
+            display: block;
+            margin: 0 -20px;
+            padding: 0 20px;
+        }
+
+        ul {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            line-height: 1.8;
+        }
+
+        .phase {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .phase-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            color: #1a1a2e;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .feature-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .feature-card h4 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: rgba(255, 107, 107, 0.2);
+            padding: 3px 10px;
+            border-radius: 4px;
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .demo-section {
+            background: rgba(79, 172, 254, 0.1);
+            border: 2px dashed #4facfe;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .demo-section h4 {
+            color: #4facfe;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        th {
+            background: rgba(0,255,136,0.2);
+            color: #00ff88;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #aaa;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .back-link {
+            color: #00ff88;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .info-box {
+            background: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-box strong {
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back-link">← 返回主文档</a>
+            <h1 style="margin-top: 15px;">🚀 版本 B - 进阶贪吃蛇游戏</h1>
+            <span class="version-tag">进阶版本</span>
+            <p>包含用户体验优化、新游戏机制和无限地图的完整版本</p>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="game_b.html" class="play-btn">🎮 试玩版本B</a>
+            <a href="version_a.html" class="nav-btn">📌 版本A</a>
+            <a href="version_c.html" class="nav-btn">⭐ 版本C</a>
+        </div>
+
+        <section>
+            <h2>📋 版本概述</h2>
+            <p>版本B是贪吃蛇游戏的进阶版本，在版本A的基础上进行了三大阶段的改进：</p>
+            
+            <div class="feature-comparison">
+                <div class="feature-card">
+                    <h4>第一阶段：用户体验提升</h4>
+                    <ul>
+                        <li>添加分数显示区域</li>
+                        <li>增加游戏控制按钮</li>
+                        <li>美化CSS界面样式</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>第二阶段：游戏机制增加</h4>
+                    <ul>
+                        <li>随机障碍物系统</li>
+                        <li>特殊食物（双倍加分）</li>
+                        <li>速度变化机制</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>第三阶段：结构性改进</h4>
+                    <ul>
+                        <li>无限/循环地图</li>
+                        <li>蛇头穿越边界</li>
+                        <li>地图边缘逻辑优化</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="game-preview">
+                <a href="game_b.html" class="play-btn">🎮 立即试玩版本B</a>
+                <p style="margin-top: 15px; color: #aaa;">点击上方按钮体验完整的进阶版贪吃蛇游戏！</p>
+            </div>
+        </section>
+
+        <!-- 第一阶段 -->
+        <section>
+            <h2><span class="phase-number">1</span>第一阶段：用户体验提升</h2>
+            <p>本阶段主要优化用户交互体验，不改变游戏核心骨架。</p>
+
+            <div class="phase">
+                <h3>1.1 添加分数显示</h3>
+                <div class="ai-prompt">
+                    <strong>用户需求：</strong>「我的贪吃蛇现在能吃豆子，但没显示分数。请帮我在HTML顶部添加一个分数显示区域，每次吃到豆子后分数加1，并更新显示。我的JavaScript里有一个处理吃豆子的函数，大概在XX行附近。」
+                </div>
+
+                <h4>HTML修改：</h4>
+                <div class="code-block">
+<pre><span class="keyword">&lt;</span><span class="function">div</span> <span class="keyword">class</span>=<span class="string">"game-info"</span><span class="keyword">&gt;</span>
+    <span class="keyword">&lt;</span><span class="function">div</span><span class="keyword">&gt;</span>分数: <span class="keyword">&lt;</span><span class="function">span</span> <span class="keyword">id</span>=<span class="string">"score"</span><span class="keyword">&gt;</span><span class="string">0</span><span class="keyword">&lt;/</span><span class="function">span</span><span class="keyword">&gt;&lt;/</span><span class="function">div</span><span class="keyword">&gt;</span>
+    <span class="keyword">&lt;</span><span class="function">div</span><span class="keyword">&gt;</span>最高分: <span class="keyword">&lt;</span><span class="function">span</span> <span class="keyword">id</span>=<span class="string">"highScore"</span><span class="keyword">&gt;</span><span class="string">0</span><span class="keyword">&lt;/</span><span class="function">span</span><span class="keyword">&gt;&lt;/</span><span class="function">div</span><span class="keyword">&gt;</span>
+<span class="keyword">&lt;/</span><span class="function">div</span><span class="keyword">&gt;</span></pre>
+                </div>
+
+                <h4>JavaScript修改：</h4>
+                <div class="code-block">
+<pre><span class="comment">// 更新分数显示</span>
+<span class="keyword">function</span> <span class="function">updateScore</span>() {
+    document.<span class="function">getElementById</span>(<span class="string">'score'</span>).textContent = score;
+    
+    <span class="comment">// 最高分逻辑</span>
+    <span class="keyword">if</span> (score > highScore) {
+        highScore = score;
+        document.<span class="function">getElementById</span>(<span class="string">'highScore'</span>).textContent = highScore;
+    }
+}
+
+<span class="comment">// 在吃食物时调用</span>
+<span class="keyword">function</span> <span class="function">checkFood</span>() {
+    <span class="keyword">const</span> head = snake[<span class="string">0</span>];
+    <span class="keyword">if</span> (head.x === food.x && head.y === food.y) {
+        score += <span class="string">1</span>;          <span class="comment">&lt;!-- 重点修改 --&gt;</span>
+        <span class="function">updateScore</span>();      <span class="comment">&lt;!-- 重点修改 --&gt;</span>
+        snake.<span class="function">push</span>({...snake[snake.length - <span class="string">1</span>]});
+        <span class="function">generateFood</span>();
+    }
+}</pre>
+                </div>
+
+                <div class="demo-section">
+                    <h4>📊 分数显示效果预览</h4>
+                    <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="display: inline-block; background: #333; color: #00ff88; padding: 10px 30px; border-radius: 8px; margin: 5px;">
+                            <strong>分数:</strong> <span id="demoScore1">0</span>
+                        </div>
+                        <div style="display: inline-block; background: #333; color: #ffc107; padding: 10px 30px; border-radius: 8px; margin: 5px;">
+                            <strong>最高分:</strong> <span id="demoHighScore1">0</span>
+                        </div>
+                        <br>
+                        <button onclick="addScoreDemo()" style="margin-top: 15px; padding: 10px 25px; background: #00ff88; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">模拟吃食物 (+1分)</button>
+                        <button onclick="resetScoreDemo()" style="margin-top: 15px; padding: 10px 25px; background: #ff6b6b; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 10px;">重置</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase">
+                <h3>1.2 增加游戏状态控制</h3>
+                <div class="ai-prompt">
+                    <strong>用户需求：</strong>「我想增加开始、暂停、重新开始按钮。目前游戏是打开就自动运行的。请帮我添加三个按钮，并让它们能控制游戏的开始、暂停和重置（蛇和分数回到初始状态）。」
+                </div>
+
+                <h4>HTML修改：</h4>
+                <div class="code-block">
+<pre><span class="keyword">&lt;</span><span class="function">button</span> <span class="keyword">id</span>=<span class="string">"startBtn"</span><span class="keyword">&gt;</span>开始游戏<span class="keyword">&lt;/</span><span class="function">button</span><span class="keyword">&gt;</span>
+<span class="keyword">&lt;</span><span class="function">button</span> <span class="keyword">id</span>=<span class="string">"pauseBtn"</span><span class="keyword">&gt;</span>暂停游戏<span class="keyword">&lt;/</span><span class="function">button</span><span class="keyword">&gt;</span>
+<span class="keyword">&lt;</span><span class="function">button</span> <span class="keyword">id</span>=<span class="string">"restartBtn"</span><span class="keyword">&gt;</span>重新开始<span class="keyword">&lt;/</span><span class="function">button</span><span class="keyword">&gt;</span></pre>
+                </div>
+
+                <h4>JavaScript修改：</h4>
+                <div class="code-block">
+<pre><span class="keyword">let</span> gameRunning = <span class="keyword">false</span>;
+<span class="keyword">let</span> isPaused = <span class="keyword">false</span>;
+
+<span class="keyword">function</span> <span class="function">startGame</span>() {
+    <span class="keyword">if</span> (gameRunning) <span class="keyword">return</span>;
+    
+    <span class="comment">// 初始化游戏状态</span>
+    snake = [
+        {x: <span class="string">10</span>, y: <span class="string">10</span>},
+        {x: <span class="string">9</span>, y: <span class="string">10</span>},
+        {x: <span class="string">8</span>, y: <span class="string">10</span>}
+    ];
+    dx = <span class="string">1</span>; dy = <span class="string">0</span>;
+    score = <span class="string">0</span>;
+    <span class="function">updateScore</span>();
+    <span class="function">generateFood</span>();
+    
+    gameRunning = <span class="keyword">true</span>;
+    isPaused = <span class="keyword">false</span>;
+    <span class="function">drawGame</span>();
+}
+
+<span class="keyword">function</span> <span class="function">togglePause</span>() {
+    <span class="keyword">if</span> (!gameRunning) <span class="keyword">return</span>;
+    
+    isPaused = !isPaused;
+    <span class="keyword">if</span> (!isPaused) {
+        <span class="function">drawGame</span>();
+    }
+}
+
+<span class="keyword">function</span> <span class="function">restartGame</span>() {
+    gameRunning = <span class="keyword">false</span>;
+    isPaused = <span class="keyword">false</span>;
+    <span class="function">startGame</span>();
+}
+
+<span class="comment">// 按钮事件绑定</span>
+document.<span class="function">getElementById</span>(<span class="string">'startBtn'</span>).addEventListener(<span class="string">'click'</span>, startGame);
+document.<span class="function">getElementById</span>(<span class="string">'pauseBtn'</span>).addEventListener(<span class="string">'click'</span>, togglePause);
+document.<span class="function">getElementById</span>(<span class="string">'restartBtn'</span>).addEventListener(<span class="string">'click'</span>, restartGame);
+
+<span class="comment">// 空格键暂停</span>
+document.<span class="function">addEventListener</span>(<span class="string">'keydown'</span>, (e) => {
+    <span class="keyword">if</span> (e.key === <span class="string">' '</span>) {
+        <span class="function">togglePause</span>();
+        e.preventDefault();
+    }
+});</pre>
+                </div>
+            </div>
+
+            <div class="phase">
+                <h3>1.3 美化界面（CSS）</h3>
+                <div class="ai-prompt">
+                    <strong>用户需求：</strong>「请帮我的贪吃蛇游戏添加一些基本的CSS样式。让蛇身是绿色的，食物是红色的，游戏区域有一个边框。让整体看起来更整洁一些。」
+                </div>
+
+                <h4>CSS样式修改：</h4>
+                <div class="code-block">
+<pre><span class="comment">/* 游戏容器样式 */</span>
+<span class="keyword">.game-container</span> {
+    <span class="function">text-align</span>: center;
+    <span class="function">padding</span>: <span class="string">30px</span>;
+    <span class="function">background</span>: <span class="string">rgba(255, 255, 255, 0.1)</span>;
+    <span class="function">border-radius</span>: <span class="string">20px</span>;
+    <span class="function">backdrop-filter</span>: <span class="string">blur(10px)</span>;
+}
+
+<span class="comment">/* 蛇身样式 */</span>
+<span class="keyword">#gameCanvas</span> <span class="keyword">蛇</span> {
+    <span class="function">fillStyle</span>: <span class="string">'green'</span>;
+    <span class="function">border-radius</span>: <span class="string">5px</span>;
+}
+
+<span class="comment">/* 食物样式 */</span>
+<span class="keyword">#gameCanvas</span> <span class="keyword">食物</span> {
+    <span class="function">fillStyle</span>: <span class="string">'red'</span>;
+    <span class="function">border-radius</span>: <span class="string">50%</span>;
+}
+
+<span class="comment">/* 游戏区域边框 */</span>
+<span class="keyword">#gameCanvas</span> {
+    <span class="function">border</span>: <span class="string">3px solid #00ff88</span>;
+    <span class="function">border-radius</span>: <span class="string">10px</span>;
+    <span class="function">box-shadow</span>: <span class="string">0 0 20px rgba(0, 255, 136, 0.3)</span>;
+}
+
+<span class="comment">/* 按钮样式 */</span>
+<span class="keyword">.btn</span> {
+    <span class="function">padding</span>: <span class="string">12px 30px</span>;
+    <span class="function">font-size</span>: <span class="string">1.1em</span>;
+    <span class="function">background</span>: <span class="string">linear-gradient(135deg, #00ff88 0%, #00cc6a 100%)</span>;
+    <span class="function">border</span>: <span class="string">none</span>;
+    <span class="function">border-radius</span>: <span class="string">25px</span>;
+    <span class="function">cursor</span>: pointer;
+    <span class="function">transition</span>: <span class="string">all 0.3s ease</span>;
+}
+
+<span class="keyword">.btn:hover</span> {
+    <span class="function">transform</span>: <span class="string">scale(1.05)</span>;
+}</pre>
+                </div>
+
+                <div class="demo-section">
+                    <h4>🎨 CSS样式预览</h4>
+                    <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; border-radius: 10px; text-align: center;">
+                        <div style="display: inline-block; background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; backdrop-filter: blur(10px);">
+                            <h3 style="color: #00ff88; margin-bottom: 20px;">🐍 贪吃蛇游戏</h3>
+                            <div style="display: flex; justify-content: space-around; margin-bottom: 20px; color: #fff;">
+                                <div style="background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius: 10px;">
+                                    <strong>分数:</strong> <span id="demoScore2">0</span>
+                                </div>
+                                <div style="background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius: 10px;">
+                                    <strong>最高分:</strong> <span id="demoHighScore2">0</span>
+                                </div>
+                            </div>
+                            <canvas id="demoCanvas" width="200" height="200" style="border: 3px solid #00ff88; border-radius: 10px; background: #0a0a1a;"></canvas>
+                            <div style="margin-top: 20px;">
+                                <button style="padding: 10px 25px; background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%); border: none; border-radius: 25px; cursor: pointer; font-weight: bold; color: #1a1a2e;">开始</button>
+                                <button style="padding: 10px 25px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border: none; border-radius: 25px; cursor: pointer; font-weight: bold; margin-left: 10px;">暂停</button>
+                                <button style="padding: 10px 25px; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); border: none; border-radius: 25px; cursor: pointer; font-weight: bold; margin-left: 10px;">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第二阶段 -->
+        <section>
+            <h2><span class="phase-number">2</span>第二阶段：增加游戏机制</h2>
+            <p>本阶段增加新的游戏元素，可能需要对核心骨架进行微调。</p>
+
+            <div class="phase">
+                <h3>2.1 增加障碍物</h3>
+                <div class="ai-prompt">
+                    <strong>用户需求：</strong>「我想在游戏地图里随机生成几个不可通过的障碍物（墙壁）。蛇撞上障碍物也会游戏结束。请帮我修改食物生成逻辑，让它也能生成障碍物，并修改碰撞检测函数，把障碍物也加进去。」
+                </div>
+
+                <h4>数据结构扩展：</h4>
+                <div class="code-block">
+<pre><span class="comment">// 障碍物数组</span>
+<span class="keyword">let</span> obstacles = [];
+
+<span class="comment">// 生成障碍物</span>
+<span class="keyword">function</span> <span class="function">generateObstacles</span>(count = <span class="string">5</span>) {
+    obstacles = [];
+    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="string">0</span>; i < count; i++) {
+        <span class="keyword">let</span> obstacle;
+        <span class="keyword">do</span> {
+            obstacle = {
+                x: <span class="function">Math.floor</span>(<span class="function">Math.random</span>() * tileCount),
+                y: <span class="function">Math.floor</span>(<span class="function">Math.random</span>() * tileCount)
+            };
+        } <span class="keyword">while</span> (
+            <span class="function">isPositionOnSnake</span>(obstacle) || 
+            <span class="function">isPositionOnObstacles</span>(obstacle) ||
+            <span class="function">isNearStart</span>(obstacle)  <span class="comment">// 远离蛇的初始位置</span>
+        );
+        obstacles.<span class="function">push</span>(obstacle);
+    }
+}</pre>
+                </div>
+
+                <h4>碰撞检测扩展：</h4>
+                <div class="code-block">
+<pre><span class="keyword">function</span> <span class="function">checkCollision</span>() {
+    <span class="keyword">const</span> head = snake[<span class="string">0</span>];
+    
+    <span class="comment">// 撞墙检测（如果是无限地图则跳过）</span>
+    <span class="keyword">if</span> (!infiniteMap) {
+        <span class="keyword">if</span> (head.x < <span class="string">0</span> || head.x >= tileCount || 
+            head.y < <span class="string">0</span> || head.y >= tileCount) {
+            <span class="function">gameOver</span>();
+        }
+    }
+    
+    <span class="comment">// 撞自己检测</span>
+    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="string">1</span>; i < snake.length; i++) {
+        <span class="keyword">if</span> (head.x === snake[i].x && head.y === snake[i].y) {
+            <span class="function">gameOver</span>();
+        }
+    }
+    
+    <span class="comment">// ★ 新增：撞障碍物检测</span>
+    <span class="keyword">for</span> (<span class="keyword">let</span> obstacle <span class="keyword">of</span> obstacles) {
+        <span class="keyword">if</span> (head.x === obstacle.x && head.y === obstacle.y) {
+            <span class="function">gameOver</span>();
+        }
+    }
+}</pre>
+                </div>
+
+                <h4>绘制障碍物：</h4>
+                <div class="code-block">
+<pre><span class="keyword">function</span> <span class="function">drawObstacles</span>() {
+    ctx.<span class="function">fillStyle</span> = <span class="string">'#666'</span>;  <span class="comment">// 灰色障碍物</span>
+    ctx.<span class="function">shadowColor</span> = <span class="string">'#333'</span>;
+    ctx.<span class="function">shadowBlur</span> = <span class="string">5</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">let</span> obstacle <span class="keyword">of</span> obstacles) {
+        ctx.<span class="function">beginPath</span>();
+        ctx.<span class="function">roundRect</span>(
+            obstacle.x * gridSize + <span class="string">1</span>,
+            obstacle.y * gridSize + <span class="string">1</span>,
+            gridSize - <span class="string">2</span>,
+            gridSize - <span class="string">2</span>,
+            <span class="string">3</span>
+        );
+        ctx.<span class="function">fill</span>();
+    }
+    
+    ctx.<span class="function">shadowBlur</span> = <span class="string">0</span>;
+}</pre>
+                </div>
+
+                <div class="demo-section">
+                    <h4>🧱 障碍物效果预览</h4>
+                    <canvas id="obstacleDemo" width="200" height="200" style="border: 3px solid #666; border-radius: 10px; background: #f0f0f0;"></canvas>
+                    <p style="margin-top: 10px; color: #aaa;">灰色方块表示随机生成的障碍物</p>
+                </div>
+            </div>
+
+            <div class="phase">
+                <h3>2.2 增加特殊食物</h3>
+                <div class="ai-prompt">
+                    <strong>用户需求：</strong>「我想让食物有两种：普通食物（加1分）和特殊食物（加5分，并且吃完后蛇的移动速度在5秒内变快）。特殊食物每吃10个普通食物出现一次，10秒后消失。请帮我扩展食物对象和吃食物的逻辑。」
+                </div>
+
+                <h4>食物类型枚举：</h4>
+                <div class="code-block">
+<pre><span class="comment">// 食物类型</span>
+<span class="keyword">const</span> FOOD_TYPE = {
+    NORMAL: <span class="string">'normal'</span>,
+    SPECIAL: <span class="string">'special'</span>
+};
+
+<span class="comment">// 食物数据结构扩展</span>
+<span class="keyword">let</span> food = {
+    x: <span class="string">15</span>,
+    y: <span class="string">15</span>,
+    type: FOOD_TYPE.NORMAL,
+    <span class="function">specialTimer</span>: <span class="string">null</span>   <span class="comment">// 特殊食物消失计时器</span>
+};
+
+<span class="comment">// 特殊食物出现条件</span>
+<span class="keyword">let</span> normalFoodEaten = <span class="string">0</span>;  <span class="comment">// 吃掉的普通食物数量</span>
+<span class="keyword">const</span> SPECIAL_FREQUENCY = <span class="string">10</span>;  <span class="comment">// 每10个普通食物出现一次特殊</span></pre>
+                </div>
+
+                <h4>特殊食物生成逻辑：</h4>
+                <div class="code-block">
+<pre><span class="keyword">function</span> <span class="function">generateFood</span>() {
+    <span class="comment">// 检查是否需要生成特殊食物</span>
+    <span class="keyword">if</span> (normalFoodEaten > <span class="string">0</span> && 
+        normalFoodEaten % SPECIAL_FREQUENCY === <span class="string">0</span> &&
+        food.type !== FOOD_TYPE.SPECIAL) {
+        
+        <span class="comment">// 生成特殊食物</span>
+        food.type = FOOD_TYPE.SPECIAL;
+        <span class="function">generatePosition</span>();
+        
+        <span class="comment">// 10秒后自动消失</span>
+        <span class="keyword">if</span> (food.specialTimer) <span class="function">clearTimeout</span>(food.specialTimer);
+        food.specialTimer = <span class="function">setTimeout</span>(() => {
+            <span class="keyword">if</span> (food.type === FOOD_TYPE.SPECIAL) {
+                food.type = FOOD_TYPE.NORMAL;
+                <span class="function">generateFood</span>();
+            }
+        }, <span class="string">10000</span>);
+        
+        <span class="keyword">return</span>;
+    }
+    
+    <span class="comment">// 生成普通食物</span>
+    food.type = FOOD_TYPE.NORMAL;
+    normalFoodEaten = <span class="string">0</span>;
+    <span class="function">generatePosition</span>();
+}
+
+<span class="keyword">function</span> <span class="function">generatePosition</span>() {
+    <span class="keyword">do</span> {
+        food.x = <span class="function">Math.floor</span>(<span class="function">Math.random</span>() * tileCount);
+        food.y = <span class="function">Math.floor</span>(<span class="function">Math.random</span>() * tileCount);
+    } <span class="keyword">while</span> (
+        <span class="function">isFoodOnSnake</span>() || 
+        <span class="function">isFoodOnObstacles</span>()
+    );
+}</pre>
+                </div>
+
+                <h4>吃食物逻辑扩展：</h4>
+                <div class="code-block">
+<pre><span class="keyword">function</span> <span class="function">checkFood</span>() {
+    <span class="keyword">const</span> head = snake[<span class="string">0</span>];
+    
+    <span class="keyword">if</span> (head.x === food.x && head.y === food.y) {
+        <span class="keyword">if</span> (food.type === FOOD_TYPE.SPECIAL) {
+            <span class="comment">// 特殊食物效果</span>
+            score += <span class="string">5</span>;
+            <span class="function">activateSpeedBoost</span>();
+            normalFoodEaten = <span class="string">0</span>;
+        } <span class="keyword">else</span> {
+            <span class="comment">// 普通食物效果</span>
+            score += <span class="string">1</span>;
+            normalFoodEaten++;
+        }
+        
+        <span class="function">updateScore</span>();
+        snake.<span class="function">push</span>({...snake[snake.length - <span class="string">1</span>]});
+        <span class="function">generateFood</span>();
+    }
+}
+
+<span class="comment">// 速度提升效果</span>
+<span class="keyword">let</span> originalSpeed = <span class="string">150</span>;
+<span class="keyword">let</span> currentSpeed = originalSpeed;
+<span class="keyword">let</span> speedBoostTimer = <span class="keyword">null</span>;
+
+<span class="keyword">function</span> <span class="function">activateSpeedBoost</span>() {
+    currentSpeed = <span class="string">80</span>;  <span class="comment">// 加速</span>
+    
+    <span class="keyword">if</span> (speedBoostTimer) <span class="function">clearTimeout</span>(speedBoostTimer);
+    
+    <span class="comment">// 5秒后恢复正常速度</span>
+    speedBoostTimer = <span class="function">setTimeout</span>(() => {
+        currentSpeed = originalSpeed;
+    }, <span class="string">5000</span>);
+}</pre>
+                </div>
+
+                <h4>特殊食物绘制：</h4>
+                <div class="code-block">
+<pre><span class="keyword">function</span> <span class="function">drawFood</span>() {
+    <span class="keyword">if</span> (food.type === FOOD_TYPE.SPECIAL) {
+        <span class="comment">// 特殊食物：金色发光圆球</span>
+        ctx.<span class="function">fillStyle</span> = <span class="string">'#ffd700'</span>;
+        ctx.<span class="function">shadowColor</span> = <span class="string">'#ffd700'</span>;
+        ctx.<span class="function">shadowBlur</span> = <span class="string">20</span>;
+        
+        ctx.<span class="function">beginPath</span>();
+        ctx.<span class="function">arc</span>(
+            food.x * gridSize + gridSize / <span class="string">2</span>,
+            food.y * gridSize + gridSize / <span class="string">2</span>,
+            gridSize / <span class="string">2</span> - <span class="string">2</span>,
+            <span class="string">0</span>,
+            Math.PI * <span class="string">2</span>
+        );
+        ctx.<span class="function">fill</span>();
+    } <span class="keyword">else</span> {
+        <span class="comment">// 普通食物：红色方块</span>
+        ctx.<span class="function">fillStyle</span> = <span class="string">'#ff4444'</span>;
+        ctx.<span class="function">shadowColor</span> = <span class="string">'#ff4444'</span>;
+        ctx.<span class="function">shadowBlur</span> = <span class="string">10</span>;
+        
+        ctx.<span class="function">beginPath</span>();
+        ctx.<span class="function">arc</span>(
+            food.x * gridSize + gridSize / <span class="string">2</span>,
+            food.y * gridSpeed</span> / <span class="string">2</span>,
+            gridSize / <span class="string">2</span> - <span class="string">2</span>,
+            <span class="string">0</span>,
+            Math.PI * <span class="string">2</span>
+        );
+        ctx.<span class="function">fill</span>();
+    }
+    
+    ctx.<span class="function">shadowBlur</span> = <span class="string">0</span>;
+}</pre>
+                </div>
+
+                <div class="demo-section">
+                    <h4>⭐ 特殊食物效果预览</h4>
+                    <div style="display: flex; justify-content: center; gap: 30px; margin: 20px 0;">
+                        <div style="text-align: center;">
+                            <div style="width: 40px; height: 40px; background: #ff4444; border-radius: 50%; box-shadow: 0 0 15px rgba(255,68,68,0.5); margin: 0 auto 10px;"></div>
+                            <p><strong>普通食物</strong></p>
+                            <p>+1 分</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="width: 40px; height: 40px; background: #ffd700; border-radius: 50%; box-shadow: 0 0 20px rgba(255,215,0,0.8); margin: 0 auto 10px;"></div>
+                            <p><strong>特殊食物</strong></p>
+                            <p>+5 分 + 加速</p>
+                        </div>
+                    </div>
+                    <table style="max-width: 400px; margin: 20px auto;">
+                        <tr>
+                            <th>属性</th>
+                            <th>普通食物</th>
+                            <th>特殊食物</th>
+                        </tr>
+                        <tr>
+                            <td>分数加成</td>
+                            <td>+1</td>
+                            <td>+5</td>
+                        </tr>
+                        <tr>
+                            <td>出现频率</td>
+                            <td>每次</td>
+                            <td>每10个普通食物</td>
+                        </tr>
+                        <tr>
+                            <td>持续时间</td>
+                            <td>永久</td>
+                            <td>10秒后消失</td>
+                        </tr>
+                        <tr>
+                            <td>特殊效果</td>
+                            <td>无</td>
+                            <td>5秒加速</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第三阶段 -->
+        <section>
+            <h2><span class="phase-number">3</span>第三阶段：结构性改进</h2>
+            <p>本阶段对游戏核心骨架进行加强，实现无限地图功能。</p>
+
+            <div class="phase">
+                <h3>3.1 实现无限/循环地图</h3>
+                <div class="ai-prompt">
+                    <strong>用户需求：</strong>「我现在是撞墙就死。我想改成无限地图：当蛇头超出右边界时，从左边出来；超出下边界时，从顶部出来。这需要怎么修改我的蛇头移动和边界检测逻辑？」
+                </div>
+
+                <h4>核心概念：</h4>
+                <div class="info-box">
+                    <strong>💡 关键思路：</strong>无限地图的核心是让蛇头在穿越边界时，从对边出现。这需要修改两个地方：
+                    <ol style="margin-top: 10px; margin-left: 20px;">
+                        <li>蛇头移动逻辑（处理坐标环绕）</li>
+                        <li>碰撞检测（移除或调整撞墙检测）</li>
+                    </ol>
+                </div>
+
+                <h4>蛇头移动逻辑修改：</h4>
+                <div class="code-block">
+<pre><span class="comment">// ★ 核心修改：无限地图坐标环绕</span>
+<span class="keyword">function</span> <span class="function">moveSnake</span>() {
+    <span class="keyword">const</span> head = {
+        x: snake[<span class="string">0</span>].x + dx,
+        y: snake[<span class="string">0</span>].y + dy
+    };
+    
+    <span class="comment">// ★ 新增：坐标环绕处理</span>
+    <span class="keyword">if</span> (head.x >= tileCount) {
+        head.x = <span class="string">0</span>;  <span class="comment">// 从右边出来，从左边进去</span>
+    } <span class="keyword">else if</span> (head.x < <span class="string">0</span>) {
+        head.x = tileCount - <span class="string">1</span>;  <span class="comment">// 从左边出来，从右边进去</span>
+    }
+    
+    <span class="keyword">if</span> (head.y >= tileCount) {
+        head.y = <span class="string">0</span>;  <span class="comment">// 从下边出来，从上边进去</span>
+    } <span class="keyword">else if</span> (head.y < <span class="string">0</span>) {
+        head.y = tileCount - <span class="string">1</span>;  <span class="comment">// 从上边出来，从下边进去</span>
+    }
+    
+    snake.<span class="function">unshift</span>(head);
+    snake.<span class="function">pop</span>();
+}</pre>
+                </div>
+
+                <h4>碰撞检测修改：</h4>
+                <div class="code-block">
+<pre><span class="keyword">function</span> <span class="function">checkCollision</span>() {
+    <span class="keyword">const</span> head = snake[<span class="string">0</span>];
+    
+    <span class="comment">// ★ 修改：如果是无限地图，跳过撞墙检测</span>
+    <span class="keyword">if</span> (!infiniteMap) {
+        <span class="keyword">if</span> (head.x < <span class="string">0</span> || head.x >= tileCount || 
+            head.y < <span class="string">0</span> || head.y >= tileCount) {
+            <span class="function">gameOver</span>();
+        }
+    }
+    
+    <span class="comment">// 撞自己检测（需要调整，因为环绕后可能撞到自己）</span>
+    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="string">1</span>; i < snake.length; i++) {
+        <span class="comment">// 注意：环绕后蛇身可能在边界处，</span>
+        <span class="comment">// 但因为我们每帧都重画完整的蛇，</span>
+        <span class="comment">// 所以正常检测即可</span>
+        <span class="keyword">if</span> (head.x === snake[i].x && head.y === snake[i].y) {
+            <span class="function">gameOver</span>();
+        }
+    }
+    
+    <span class="comment">// 撞障碍物检测</span>
+    <span class="keyword">for</span> (<span class="keyword">let</span> obstacle <span class="keyword">of</span> obstacles) {
+        <span class="keyword">if</span> (head.x === obstacle.x && head.y === obstacle.y) {
+            <span class="function">gameOver</span>();
+        }
+    }
+}</pre>
+                </div>
+
+                <h4>地图切换功能：</h4>
+                <div class="code-block">
+<pre><span class="comment">// 地图模式切换</span>
+<span class="keyword">let</span> infiniteMap = <span class="keyword">false</span>;  <span class="comment">// 默认普通地图</span>
+
+<span class="keyword">function</span> <span class="function">toggleMapMode</span>() {
+    infiniteMap = !infiniteMap;
+    
+    <span class="keyword">const</span> status = infiniteMap ? <span class="string">'无限地图'</span> : <span class="string">'普通地图'</span>;
+    alert(<span class="string">`已切换到：${status}`</span>);
+    
+    <span class="comment">// 重置游戏</span>
+    <span class="function">restartGame</span>();
+}
+
+<span class="comment">// 在UI中添加切换按钮</span>
+<span class="comment">// &lt;button id="mapModeBtn" onclick="toggleMapMode()"&gt;切换地图模式&lt;/button&gt;</span></pre>
+                </div>
+
+                <div class="demo-section">
+                    <h4>🗺️ 无限地图效果示意图</h4>
+                    <div style="display: flex; justify-content: center; gap: 40px; margin: 30px 0;">
+                        <div style="text-align: center;">
+                            <div style="width: 150px; height: 150px; border: 3px solid #00ff88; position: relative; background: #0a0a1a;">
+                                <div style="position: absolute; top: 50%; left: -25px; transform: translateY(-50%); width: 20px; height: 40px; background: linear-gradient(to right, rgba(0,255,136,0.5), transparent);"></div>
+                                <div style="position: absolute; top: 50%; right: -25px; transform: translateY(-50%); width: 20px; height: 40px; background: linear-gradient(to left, rgba(0,255,136,0.5), transparent);"></div>
+                                <div style="position: absolute; left: 50%; top: -25px; transform: translateX(-50%); width: 40px; height: 20px; background: linear-gradient(to bottom, rgba(0,255,136,0.5), transparent);"></div>
+                                <div style="position: absolute; left: 50%; bottom: -25px; transform: translateX(-50%); width: 40px; height: 20px; background: linear-gradient(to top, rgba(0,255,136,0.5), transparent);"></div>
+                                <div style="position: absolute; top: 40%; left: 40%; width: 20px; height: 20px; background: #00ff88; border-radius: 3px;"></div>
+                            </div>
+                            <p style="margin-top: 10px;"><strong>普通地图</strong></p>
+                            <p style="color: #ff6b6b;">撞墙 = 游戏结束</p>
+                        </div>
+                        <div style="font-size: 50px; display: flex; align-items: center;">➡️</div>
+                        <div style="text-align: center;">
+                            <div style="width: 150px; height: 150px; border: 3px dashed #4facfe; position: relative; background: #0a0a1a; border-radius: 10px;">
+                                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; border: 2px solid rgba(79,172,254,0.3); border-radius: 8px;"></div>
+                                <div style="position: absolute; top: 40%; left: 70%; width: 20px; height: 20px; background: #00ff88; border-radius: 3px; box-shadow: 0 0 15px rgba(0,255,136,0.5);"></div>
+                                <div style="position: absolute; top: 40%; left: 10%; width: 20px; height: 20px; background: #4facfe; border-radius: 3px; opacity: 0.7;"></div>
+                                <div style="position: absolute; top: 10%; left: 40%; width: 20px; height: 20px; background: #4facfe; border-radius: 3px; opacity: 0.7;"></div>
+                                <div style="position: absolute; bottom: 10%; left: 40%; width: 20px; height: 20px; background: #4facfe; border-radius: 3px; opacity: 0.7;"></div>
+                                <p style="font-size: 12px; color: #4facfe; margin-top: 5px;">循环穿越</p>
+                            </div>
+                            <p style="margin-top: 10px;"><strong>无限地图</strong></p>
+                            <p style="color: #4facfe;">穿越边界继续游戏</p>
+                        </div>
+                    </div>
+                    <table style="max-width: 500px; margin: 20px auto;">
+                        <tr>
+                            <th>行为</th>
+                            <th>普通地图</th>
+                            <th>无限地图</th>
+                        </tr>
+                        <tr>
+                            <td>超出右边界</td>
+                            <td style="color: #ff6b6b;">游戏结束</td>
+                            <td style="color: #4facfe;">从左边出现</td>
+                        </tr>
+                        <tr>
+                            <td>超出左边界</td>
+                            <td style="color: #ff6b6b;">游戏结束</td>
+                            <td style="color: #4facfe;">从右边出现</td>
+                        </tr>
+                        <tr>
+                            <td>超出下边界</td>
+                            <td style="color: #ff6b6b;">游戏结束</td>
+                            <td style="color: #4facfe;">从顶部出现</td>
+                        </tr>
+                        <tr>
+                            <td>超出上边界</td>
+                            <td style="color: #ff6b6b;">游戏结束</td>
+                            <td style="color: #4facfe;">从底部出现</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>📥 完整版本B游戏</h2>
+            <p>以上所有功能已集成到版本B游戏中，包含完整的障碍物系统、特殊食物机制和无限地图模式。</p>
+            
+            <div class="game-preview">
+                <a href="game_b.html" class="play-btn">🎮 立即试玩完整版本B</a>
+            </div>
+
+            <h3>版本B功能清单：</h3>
+            <ul>
+                <li><span class="highlight">✓</span> 分数实时显示和最高分记录</li>
+                <li><span class="highlight">✓</span> 开始、暂停、重新开始按钮控制</li>
+                <li><span class="highlight">✓</span> 空格键快速暂停</li>
+                <li><span class="highlight">✓</span> 美观的现代化界面</li>
+                <li><span class="highlight">✓</span> 随机生成的障碍物（撞到游戏结束）</li>
+                <li><span class="highlight">✓</span> 特殊食物（+5分，5秒加速效果）</li>
+                <li><span class="highlight">✓</span> 普通食物（+1分）</li>
+                <li><span class="highlight">✓</span> 无限地图模式（可切换）</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>🔜 下一步：版本C</h2>
+            <p>版本B已经是一个功能完整的贪吃蛇游戏了。版本C将进一步优化和扩展：</p>
+            <ul>
+                <li>平滑动画效果和视觉特效</li>
+                <li>响应式设计（适配不同屏幕尺寸）</li>
+                <li>音效和背景音乐</li>
+                <li>关卡系统</li>
+                <li>排行榜功能</li>
+                <li>触摸控制（支持移动端）</li>
+            </ul>
+            <p>点击 <a href="version_c.html" class="back-link">这里</a> 查看版本C的详细文档。</p>
+        </section>
+
+        <div class="footer">
+            <p>📚 贪吃蛇游戏开发文档 | <a href="index.html" class="back-link">返回主文档</a></p>
+        </div>
+    </div>
+
+    <script>
+        // 分数演示
+        let demoScore = 0;
+        let demoHighScore = 0;
+
+        function addScoreDemo() {
+            demoScore++;
+            document.getElementById('demoScore1').textContent = demoScore;
+            document.getElementById('demoScore2').textContent = demoScore;
+            if (demoScore > demoHighScore) {
+                demoHighScore = demoScore;
+                document.getElementById('demoHighScore1').textContent = demoHighScore;
+                document.getElementById('demoHighScore2').textContent = demoHighScore;
+            }
+        }
+
+        function resetScoreDemo() {
+            demoScore = 0;
+            document.getElementById('demoScore1').textContent = '0';
+            document.getElementById('demoScore2').textContent = '0';
+        }
+
+        // 障碍物预览
+        function drawObstacleDemo() {
+            const canvas = document.getElementById('obstacleDemo');
+            const ctx = canvas.getContext('2d');
+            const gridSize = 10;
+            const tileCount = 20;
+
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制网格
+            ctx.strokeStyle = '#ddd';
+            for (let i = 0; i <= tileCount; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * gridSize, 0);
+                ctx.lineTo(i * gridSize, canvas.height);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(0, i * gridSize);
+                ctx.lineTo(canvas.width, i * gridSize);
+                ctx.stroke();
+            }
+
+            // 绘制障碍物
+            ctx.fillStyle = '#666';
+            const obstacles = [
+                {x: 5, y: 5},
+                {x: 12, y: 8},
+                {x: 3, y: 15},
+                {x: 16, y: 3},
+                {x: 10, y: 12}
+            ];
+
+            for (let obs of obstacles) {
+                ctx.fillRect(obs.x * gridSize, obs.y * gridSize, gridSize - 2, gridSize - 2);
+            }
+
+            // 绘制蛇
+            ctx.fillStyle = 'green';
+            const snake = [
+                {x: 10, y: 10},
+                {x: 9, y: 10},
+                {x: 8, y: 10}
+            ];
+
+            for (let segment of snake) {
+                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+            }
+        }
+
+        drawObstacleDemo();
+    </script>
+</body>
+</html>

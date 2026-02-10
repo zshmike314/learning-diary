@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>版本C - 高级贪吃蛇游戏文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .header h1 {
+            color: #ffd700;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .version-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            color: #1a1a2e;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .nav-buttons {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            padding: 15px 40px;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .game-preview {
+            text-align: center;
+            margin: 30px 0;
+            padding: 30px;
+            background: rgba(255,215,0,0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: #00ff88;
+            margin: 25px 0 15px;
+            font-size: 1.5em;
+            border-left: 4px solid #ffd700;
+            padding-left: 15px;
+        }
+
+        h4 {
+            color: #4facfe;
+            margin: 20px 0 10px;
+            font-size: 1.2em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #ddd;
+            line-height: 1.9;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffd700;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .feature-card h4 {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .feature-card ul {
+            margin-left: 20px;
+        }
+
+        .feature-card li {
+            margin-bottom: 8px;
+            color: #ccc;
+        }
+
+        .code-block {
+            background: #0d1117;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .code-block pre {
+            color: #c9d1d9;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .code-block .comment {
+            color: #8b949e;
+        }
+
+        .code-block .keyword {
+            color: #ff7b72;
+        }
+
+        .code-block .string {
+            color: #a5d6ff;
+        }
+
+        .code-block .function {
+            color: #d2a8ff;
+        }
+
+        .highlight-line {
+            background: rgba(255, 215, 0, 0.2);
+            display: block;
+            margin: 0 -20px;
+            padding: 0 20px;
+        }
+
+        ul {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            line-height: 1.8;
+        }
+
+        .info-box {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 4px solid #ffd700;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .info-box strong {
+            color: #ffd700;
+        }
+
+        .demo-section {
+            background: rgba(79, 172, 254, 0.1);
+            border: 2px dashed #4facfe;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .demo-section h4 {
+            color: #4facfe;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        th {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+        }
+
+        .highlight {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 3px 10px;
+            border-radius: 4px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .version-comparison {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .version-col {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .version-col h4 {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .version-col.version-a h4 {
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            color: #1a1a2e;
+        }
+
+        .version-col.version-b h4 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #1a1a2e;
+        }
+
+        .version-col.version-c h4 {
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            color: #1a1a2e;
+        }
+
+        .version-col ul {
+            list-style: none;
+            margin: 0;
+        }
+
+        .version-col li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9em;
+        }
+
+        .version-col li:before {
+            content: "✓ ";
+            color: #00ff88;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #aaa;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .back-link {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 900px) {
+            .version-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back-link">← 返回主文档</a>
+            <h1 style="margin-top: 15px;">⭐ 版本 C - 高级贪吃蛇游戏</h1>
+            <span class="version-tag">高级版本</span>
+            <p>包含所有功能的终极版本，集成平滑动画、等级系统、传送门和完整设置</p>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="game_c.html" class="play-btn">🎮 试玩版本C</a>
+            <a href="version_a.html" class="nav-btn">📌 版本A</a>
+            <a href="version_b.html" class="nav-btn">🚀 版本B</a>
+        </div>
+
+        <section>
+            <h2>📋 版本C功能概览</h2>
+            <p>版本C是贪吃蛇游戏的终极版本，集成了之前所有版本的功能，并添加了大量高级特性：</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🎮 完整游戏机制</h4>
+                    <ul>
+                        <li>经典地图和无限地图双模式</li>
+                        <li>普通、特殊、奖励三种食物</li>
+                        <li>随机障碍物系统</li>
+                        <li>传送门功能（无限模式）</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>📈 等级与进度系统</h4>
+                    <ul>
+                        <li>经验值积累机制</li>
+                        <li>等级提升系统</li>
+                        <li>速度随等级增加</li>
+                        <li>游戏时长统计</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>✨ 视觉特效</h4>
+                    <ul>
+                        <li>粒子效果系统</li>
+                        <li>蛇身拖尾效果</li>
+                        <li>升级动画提示</li>
+                        <li>渐变色蛇身</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>⚙️ 完整设置系统</h4>
+                    <ul>
+                        <li>三种难度选择</li>
+                        <li>音效音量控制</li>
+                        <li>特效开关</li>
+                        <li>本地存储最高分</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="game-preview">
+                <a href="game_c.html" class="play-btn">🎮 立即试玩终极版本C</a>
+                <p style="margin-top: 15px; color: #ffd700;">体验最完整的贪吃蛇游戏！</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>📊 版本对比</h2>
+            <div class="version-comparison">
+                <div class="version-col version-a">
+                    <h4>📌 版本A</h4>
+                    <ul>
+                        <li>基础蛇移动控制</li>
+                        <li>碰撞检测</li>
+                        <li>简单分数显示</li>
+                        <li>基础界面</li>
+                        <li>撞墙死亡</li>
+                    </ul>
+                </div>
+                <div class="version-col version-b">
+                    <h4>🚀 版本B</h4>
+                    <ul>
+                        <li>所有A的功能</li>
+                        <li>分数和最高分记录</li>
+                        <li>控制按钮</li>
+                        <li>随机障碍物</li>
+                        <li>特殊食物</li>
+                        <li>无限地图模式</li>
+                    </ul>
+                </div>
+                <div class="version-col version-c">
+                    <h4>⭐ 版本C</h4>
+                    <ul>
+                        <li>所有B的功能</li>
+                        <li>等级系统</li>
+                        <li>经验值机制</li>
+                        <li>粒子特效</li>
+                        <li>传送门</li>
+                        <li>奖励食物</li>
+                        <li>完整设置面板</li>
+                        <li>难度选择</li>
+                        <li>游戏时长统计</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>🔧 核心代码实现</h2>
+
+            <h3>1. 等级和经验系统</h3>
+            <div class="code-block">
+<pre><span class="comment">// 等级和经验系统</span>
+<span class="keyword">let</span> level = <span class="string">1</span>;
+<span class="keyword">let</span> experience = <span class="string">0</span>;
+<span class="keyword">let</span> experienceToNextLevel = <span class="string">100</span>;
+<span class="keyword">let</span> speedMultiplier = <span class="string">1</span>;
+
+<span class="keyword">function</span> <span class="function">checkLevelUp</span>() {
+    <span class="keyword">if</span> (experience >= experienceToNextLevel) {
+        level++;
+        experience -= experienceToNextLevel;
+        
+        <span class="comment">// 升级所需经验递增</span>
+        experienceToNextLevel = <span class="function">Math.floor</span>(experienceToNextLevel * <span class="string">1.5</span>);
+        
+        <span class="comment">// 速度随等级增加</span>
+        speedMultiplier += difficulties[difficulty].speedIncrease;
+        currentSpeed = baseSpeed / speedMultiplier;
+        
+        <span class="function">showLevelUp</span>();
+        <span class="function">updateUI</span>();
+    }
+}
+
+<span class="keyword">function</span> <span class="function">showLevelUp</span>() {
+    document.<span class="function">getElementById</span>(<span class="string">'newLevel'</span>).textContent = level;
+    
+    <span class="comment">// 显示升级动画</span>
+    <span class="keyword">const</span> notification = document.<span class="function">getElementById</span>(<span class="string">'levelUpNotification'</span>);
+    notification.style.display = <span class="string">'block'</span>;
+    
+    <span class="function">setTimeout</span>(() => {
+        notification.style.display = <span class="string">'none'</span>;
+    }, <span class="string">2000</span>);
+}</pre>
+            </div>
+
+            <h3>2. 食物类型系统</h3>
+            <div class="code-block">
+<pre><span class="comment">// 食物类型枚举</span>
+<span class="keyword">const</span> FOOD_TYPE = {
+    NORMAL: <span class="string">'normal'</span>,    <span class="comment">// 普通食物 (+1分, +10经验)</span>
+    SPECIAL: <span class="string">'special'</span>,  <span class="comment">// 特殊食物 (+5分, +30经验)</span>
+    BONUS: <span class="string">'bonus'</span>       <span class="comment">// 奖励食物 (+10分, +50经验)</span>
+};
+
+<span class="comment">// 生成食物逻辑</span>
+<span class="keyword">function</span> <span class="function">generateFood</span>() {
+    <span class="keyword">const</span> rand = <span class="function">Math.random</span>();
+    
+    <span class="comment">// 5%概率生成奖励食物（3级后）</span>
+    <span class="keyword">if</span> (rand < <span class="string">0.05</span> && level >= <span class="string">3</span>) {
+        food.type = FOOD_TYPE.BONUS;
+        <span class="comment">// ... 生成位置逻辑</span>
+        
+        <span class="comment">// 8秒后消失</span>
+        bonusFoodTimer = <span class="function">setTimeout</span>(() => {
+            <span class="keyword">if</span> (food.type === FOOD_TYPE.BONUS) {
+                food.type = FOOD_TYPE.NORMAL;
+                <span class="function">generateFood</span>();
+            }
+        }, <span class="string">8000</span>);
+    }
+    <span class="comment">// 每8个普通食物出现一次特殊食物</span>
+    <span class="keyword">else if</span> (normalFoodEaten > <span class="string">0</span> && 
+               normalFoodEaten % <span class="string">8</span> === <span class="string">0</span>) {
+        food.type = FOOD_TYPE.SPECIAL;
+        <span class="comment">// ... 生成位置逻辑</span>
+    }
+    <span class="keyword">else</span> {
+        food.type = FOOD_TYPE.NORMAL;
+        <span class="comment">// ... 生成位置逻辑</span>
+    }
+}
+
+<span class="comment">// 吃食物处理</span>
+<span class="keyword">function</span> <span class="function">checkFood</span>() {
+    <span class="keyword">let</span> expGain = <span class="string">10</span>;
+    <span class="keyword">let</span> scoreGain = <span class="string">1</span>;
+    
+    <span class="keyword">if</span> (food.type === FOOD_TYPE.SPECIAL) {
+        scoreGain = <span class="string">5</span>;
+        expGain = <span class="string">30</span>;
+        <span class="function">activateSpeedBoost</span>(<span class="string">1.3</span>);
+    } <span class="keyword">else if</span> (food.type === FOOD_TYPE.BONUS) {
+        scoreGain = <span class="string">10</span>;
+        expGain = <span class="string">50</span>;
+    }
+    
+    score += scoreGain;
+    experience += expGain;
+    
+    <span class="function">checkLevelUp</span>();
+}</pre>
+            </div>
+
+            <h3>3. 传送门系统</h3>
+            <div class="code-block">
+<pre><span class="comment">// 传送门数据结构</span>
+<span class="keyword">let</span> portals = [];
+
+<span class="comment">// 生成传送门</span>
+<span class="keyword">function</span> <span class="function">generatePortals</span>() {
+    portals = [];
+    <span class="keyword">if</span> (mapMode !== <span class="string">'infinite'</span>) <span class="keyword">return</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="string">0</span>; i < <span class="string">2</span>; i++) {  <span class="comment">// 生成2个传送门</span>
+        <span class="keyword">let</span> portal;
+        <span class="keyword">let</span> attempts = <span class="string">0</span>;
+        <span class="keyword">do</span> {
+            portal = {
+                x: <span class="function">Math.floor</span>(<span class="function">Math.random</span>() * TILE_COUNT),
+                y: <span class="function">Math.floor</span>(<span class="function">Math.random</span>() * TILE_COUNT),
+                id: i
+            };
+            attempts++;
+        } <span class="keyword">while</span> (<span class="comment">/* 避免位置重叠 */</span>) && attempts < <span class="string">100</span>;
+        
+        <span class="keyword">if</span> (attempts < <span class="string">100</span>) {
+            portals.<span class="function">push</span>(portal);
+        }
+    }
+}
+
+<span class="comment">// 移动时检测传送门</span>
+<span class="keyword">function</span> <span class="function">moveSnake</span>() {
+    <span class="comment">// ... 移动逻辑</span>
+    
+    <span class="keyword">if</span> (mapMode === <span class="string">'infinite'</span>) {
+        <span class="keyword">for</span> (<span class="keyword">let</span> portal <span class="keyword">of</span> portals) {
+            <span class="keyword">if</span> (head.x === portal.x && head.y === portal.y) {
+                <span class="keyword">const</span> otherPortal = portals.<span class="function">find</span>(p => p.id !== portal.id);
+                <span class="keyword">if</span> (otherPortal) {
+                    head.x = otherPortal.x;
+                    head.y = otherPortal.y;
+                    <span class="function">createTeleportEffect</span>(portal, otherPortal);
+                    <span class="keyword">break</span>;
+                }
+            }
+        }
+    }
+    
+    <span class="comment">// ... 继续移动逻辑</span>
+}</pre>
+            </div>
+
+            <h3>4. 粒子特效系统</h3>
+            <div class="code-block">
+<pre><span class="comment">// 粒子效果系统</span>
+<span class="keyword">let</span> particles = [];
+<span class="keyword">let</span> effectsEnabled = <span class="keyword">true</span>;
+
+<span class="comment">// 创建吃食物特效</span>
+<span class="keyword">function</span> <span class="function">createEatEffect</span>(x, y) {
+    <span class="keyword">if</span> (!effectsEnabled) <span class="keyword">return</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="string">0</span>; i < <span class="string">8</span>; i++) {
+        particles.<span class="function">push</span>({
+            x: x * GRID_SIZE + GRID_SIZE / <span class="string">2</span>,
+            y: y * GRID_SIZE + GRID_SIZE / <span class="string">2</span>,
+            vx: (<span class="function">Math.random</span>() - <span class="string">0.5</span>) * <span class="string">8</span>,
+            vy: (<span class="function">Math.random</span>() - <span class="string">0.5</span>) * <span class="string">8</span>,
+            life: <span class="string">1</span>,
+            color: food.type === FOOD_TYPE.SPECIAL ? <span class="string">'#ffd700'</span> : <span class="string">'#ff4444'</span>
+        });
+    }
+}
+
+<span class="comment">// 更新粒子</span>
+<span class="keyword">function</span> <span class="function">updateParticles</span>() {
+    particles = particles.<span class="function">filter</span>(p => {
+        p.life -= <span class="string">0.03</span>;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= <span class="string">0.95</span>;  <span class="comment">// 阻尼效果</span>
+        p.vy *= <span class="string">0.95</span>;
+        <span class="keyword">return</span> p.life > <span class="string">0</span>;
+    });
+}
+
+<span class="comment">// 绘制粒子</span>
+<span class="keyword">function</span> <span class="function">drawParticles</span>() {
+    <span class="keyword">if</span> (!effectsEnabled) <span class="keyword">return</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">let</span> p <span class="keyword">of</span> particles) {
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.<span class="function">beginPath</span>();
+        ctx.<span class="function">arc</span>(p.x, p.y, <span class="string">4</span>, <span class="string">0</span>, Math.PI * <span class="string">2</span>);
+        ctx.<span class="function">fill</span>();
+    }
+    ctx.globalAlpha = <span class="string">1</span>;
+}</pre>
+            </div>
+
+            <h3>5. 蛇身拖尾效果</h3>
+            <div class="code-block">
+<pre><span class="comment">// 拖尾效果系统</span>
+<span class="keyword">let</span> trails = [];
+
+<span class="keyword">function</span> <span class="function">moveSnake</span>() {
+    <span class="comment">// ... 移动逻辑</span>
+    
+    <span class="keyword">if</span> (effectsEnabled) {
+        trails.<span class="function">push</span>({
+            x: head.x,
+            y: head.y,
+            alpha: <span class="string">0.6</span>,
+            color: <span class="string">`hsl(${(score * 10) % 360}, 70%, 50%)`</span>
+        });
+        
+        <span class="comment">// 限制拖尾长度</span>
+        <span class="keyword">if</span> (trails.length > <span class="string">5</span>) trails.<span class="function">shift</span>();
+    }
+    
+    <span class="comment">// ... 继续逻辑</span>
+}
+
+<span class="comment">// 绘制拖尾</span>
+<span class="keyword">function</span> <span class="function">draw</span>() {
+    <span class="comment">// ... 其他绘制</span>
+    
+    <span class="keyword">if</span> (effectsEnabled) {
+        ctx.globalAlpha = <span class="string">0.3</span>;
+        <span class="keyword">for</span> (<span class="keyword">let</span> trail <span class="keyword">of</span> trails) {
+            ctx.fillStyle = trail.color;
+            ctx.<span class="function">beginPath</span>();
+            ctx.<span class="function">arc</span>(
+                trail.x * GRID_SIZE + GRID_SIZE / <span class="string">2</span>,
+                trail.y * GRID_SIZE + GRID_SIZE / <span class="string">2</span>,
+                GRID_SIZE / <span class="string">3</span>,
+                <span class="string">0</span>,
+                Math.PI * <span class="string">2</span>
+            );
+            ctx.<span class="function">fill</span>();
+        }
+        ctx.globalAlpha = <span class="string">1</span>;
+    }
+}</pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>⚙️ 难度系统</h2>
+            <p>版本C引入了完整的难度系统，影响游戏的基础速度和难度：</p>
+
+            <table>
+                <tr>
+                    <th>难度</th>
+                    <th>基础速度</th>
+                    <th>障碍物数量</th>
+                    <th>速度递增</th>
+                    <th>适合玩家</th>
+                </tr>
+                <tr>
+                    <td>简单</td>
+                    <td>180ms/帧</td>
+                    <td>3个</td>
+                    <td>5%</td>
+                    <td>新手入门</td>
+                </tr>
+                <tr>
+                    <td>普通</td>
+                    <td>150ms/帧</td>
+                    <td>5个</td>
+                    <td>8%</td>
+                    <td>普通玩家</td>
+                </tr>
+                <tr>
+                    <td>困难</td>
+                    <td>120ms/帧</td>
+                    <td>8个</td>
+                    <td>12%</td>
+                    <td>挑战高手</td>
+                </tr>
+            </table>
+
+            <div class="info-box">
+                <strong>💡 提示：</strong>难度设置会影响游戏的整体节奏。困难模式下，蛇的移动速度更快，障碍物更多，且随等级提升速度增加更快。
+            </div>
+
+            <h3>难度配置代码：</h3>
+            <div class="code-block">
+<pre><span class="keyword">const</span> difficulties = {
+    easy: { 
+        speed: <span class="string">180</span>,           <span class="comment">// 较慢的基础速度</span>
+        obstacleCount: <span class="string">3</span>,        <span class="comment">// 较少障碍物</span>
+        speedIncrease: <span class="string">0.05</span>        <span class="comment">// 每次升级速度+5%</span>
+    },
+    normal: { 
+        speed: <span class="string">150</span>,           <span class="comment">// 中等速度</span>
+        obstacleCount: <span class="string">5</span>,        <span class="comment">// 适量障碍物</span>
+        speedIncrease: <span class="string">0.08</span>        <span class="comment">// 每次升级速度+8%</span>
+    },
+    hard: { 
+        speed: <span class="string">120</span>,           <span class="comment">// 较快速度</span>
+        obstacleCount: <span class="string">8</span>,        <span class="comment">// 更多障碍物</span>
+        speedIncrease: <span class="string">0.12</span>        <span class="comment">// 每次升级速度+12%</span>
+    }
+};
+
+<span class="comment">// 根据选择的应用配置</span>
+<span class="keyword">function</span> <span class="function">applyDifficulty</span>() {
+    <span class="keyword">const</span> config = difficulties[difficulty];
+    baseSpeed = config.speed;
+    generateObstacles(config.obstacleCount);
+}</pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>🎨 视觉效果预览</h2>
+
+            <div class="demo-section">
+                <h4>⭐ 食物类型效果</h4>
+                <div style="display: flex; justify-content: center; gap: 40px; margin: 30px 0; flex-wrap: wrap;">
+                    <div style="text-align: center;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #ff4444, #cc0000); border-radius: 50%; box-shadow: 0 0 20px rgba(255,68,68,0.6); margin: 0 auto 10px;"></div>
+                        <p><strong>普通食物</strong></p>
+                        <p style="color: #aaa;">+1分, +10经验</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #ffd700, #ffaa00); border-radius: 50%; box-shadow: 0 0 25px rgba(255,215,0,0.8); margin: 0 auto 10px;"></div>
+                        <p><strong>特殊食物</strong></p>
+                        <p style="color: #aaa;">+5分, +30经验, 加速</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-radius: 50%; box-shadow: 0 0 25px rgba(155,89,182,0.8); margin: 0 auto 10px;"></div>
+                        <p><strong>奖励食物</strong></p>
+                        <p style="color: #aaa;">+10分, +50经验, 稀有</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h4>🐍 蛇身渐变效果</h4>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin: 20px 0;">
+                    <div style="width: 60px; height: 25px; background: linear-gradient(90deg, #00cc6a, #00ff88); border-radius: 5px;"></div>
+                    <span style="color: #aaa;">→</span>
+                    <div style="width: 60px; height: 25px; background: linear-gradient(90deg, #006633, #009944); border-radius: 5px;"></div>
+                </div>
+                <p style="text-align: center; color: #aaa;">蛇头明亮 → 蛇尾渐暗</p>
+            </div>
+
+            <div class="demo-section">
+                <h4>🎮 传送门效果</h4>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 60px; margin: 20px 0;">
+                    <div style="text-align: center;">
+                        <div style="width: 50px; height: 50px; background: rgba(0, 255, 255, 0.3); border: 3px solid #00ffff; border-radius: 50%; box-shadow: 0 0 20px rgba(0,255,255,0.6); margin: 0 auto;"></div>
+                        <p style="margin-top: 10px;"><strong>入口</strong></p>
+                    </div>
+                    <div style="font-size: 30px; color: #00ffff;">✨</div>
+                    <div style="text-align: center;">
+                        <div style="width: 50px; height: 50px; background: rgba(0, 255, 255, 0.3); border: 3px solid #00ffff; border-radius: 50%; box-shadow: 0 0 20px rgba(0,255,255,0.6); margin: 0 auto;"></div>
+                        <p style="margin-top: 10px;"><strong>出口</strong></p>
+                    </div>
+                </div>
+                <p style="text-align: center; color: #aaa;">进入一个传送门会从另一个传送门出来</p>
+            </div>
+
+            <div class="demo-section">
+                <h4>📊 等级进度条</h4>
+                <div style="background: rgba(0,0,0,0.3); border-radius: 10px; padding: 20px; max-width: 400px; margin: 20px auto;">
+                    <p style="margin-bottom: 10px; color: #00ff88;">当前等级: <strong>5</strong></p>
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 5px; height: 20px; overflow: hidden; margin-bottom: 10px;">
+                        <div style="background: linear-gradient(90deg, #00ff88, #4facfe); width: 65%; height: 100%; border-radius: 5px;"></div>
+                    </div>
+                    <p style="color: #aaa; font-size: 0.9em;">65 / 100 经验</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>📥 完整版本C游戏</h2>
+            <p>以上所有功能已集成到版本C游戏中，包含完整的等级系统、粒子特效、传送门和设置面板。</p>
+
+            <div class="game-preview">
+                <a href="game_c.html" class="play-btn">🎮 立即试玩终极版本C</a>
+            </div>
+
+            <h3>版本C完整功能清单：</h3>
+            <ul>
+                <li><span class="highlight">✓</span> 所有版本A和B的功能</li>
+                <li><span class="highlight">✓</span> 三种食物类型（普通、特殊、奖励）</li>
+                <li><span class="highlight">✓</span> 等级系统和经验积累</li>
+                <li><span class="highlight">✓</span> 等级提升速度和特效</li>
+                <li><span class="highlight">✓</span> 传送门系统（无限模式）</li>
+                <li><span class="highlight">✓</span> 粒子特效系统</li>
+                <li><span class="highlight">✓</span> 蛇身拖尾效果</li>
+                <li><span class="highlight">✓</span> 三种难度选择</li>
+                <li><span class="highlight">✓</span> 音效音量控制</li>
+                <li><span class="highlight">✓</span> 特效开关</li>
+                <li><span class="highlight">✓</span> 游戏时长统计</li>
+                <li><span class="highlight">✓</span> 本地存储最高分</li>
+                <li><span class="highlight">✓</span> 渐变色蛇身设计</li>
+                <li><span class="highlight">✓</span> 蛇眼动画效果</li>
+                <li><span class="highlight">✓</span> 升级动画提示</li>
+                <li><span class="highlight">✓</span> 分数飘字效果</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>🚀 继续发展</h2>
+            <p>版本C已经是相当完整的游戏了，但仍有无限的发展可能：</p>
+            <ul>
+                <li><strong>多人对战模式</strong> - 与朋友一起竞技</li>
+                <li><strong>关卡编辑器</strong> - 自定义关卡</li>
+                <li><strong>排行榜系统</strong> - 全球排名</li>
+                <li><strong>成就系统</strong> - 收集成就</li>
+                <li><strong>主题商店</strong> - 不同的皮肤</li>
+                <li><strong>每日挑战</strong> - 限时任务</li>
+                <li><strong>音效和音乐</strong> - 沉浸体验</li>
+                <li><strong>移动端适配</strong> - 触摸控制</li>
+            </ul>
+            <div class="info-box">
+                <strong>🎯 总结：</strong>通过这三个版本的学习，我们完整经历了从基础功能到高级特效的开发过程。版本A奠定了核心机制，版本B增加了游戏深度，版本C则提供了完整的用户体验。每个版本都是基于前一个版本迭代而来，展示了游戏开发的渐进式改进。
+            </div>
+        </section>
+
+        <div class="footer">
+            <p>📚 贪吃蛇游戏开发文档 | <a href="index.html" class="back-link">返回主文档</a></p>
+            <p style="margin-top: 10px; font-size: 0.9em;">从基础到高级，完整的游戏开发历程</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>版本A - 基础贪吃蛇游戏文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .header h1 {
+            color: #00ff88;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .version-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            color: #1a1a2e;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .nav-buttons {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0,255,136,0.3);
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            padding: 12px 30px;
+            border-radius: 25px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            color: #00ff88;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: #4facfe;
+            margin: 20px 0 15px;
+            font-size: 1.4em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+
+        .code-block {
+            background: #0d1117;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .code-block pre {
+            color: #c9d1d9;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .code-block .comment {
+            color: #8b949e;
+        }
+
+        .code-block .keyword {
+            color: #ff7b72;
+        }
+
+        .code-block .string {
+            color: #a5d6ff;
+        }
+
+        .code-block .function {
+            color: #d2a8ff;
+        }
+
+        ul {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-item {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #00ff88;
+        }
+
+        .feature-item h4 {
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: rgba(255, 107, 107, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #ff6b6b;
+        }
+
+        .game-preview {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .game-preview img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #aaa;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .back-link {
+            color: #00ff88;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back-link">← 返回主文档</a>
+            <h1 style="margin-top: 15px;">📌 版本 A - 基础贪吃蛇游戏</h1>
+            <span class="version-tag">基础版本</span>
+            <p>包含核心游戏机制的最小可行产品</p>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="game_a.html" class="play-btn">🎮 试玩版本A</a>
+            <a href="version_b.html" class="nav-btn">🚀 版本B</a>
+            <a href="version_c.html" class="nav-btn">⭐ 版本C</a>
+        </div>
+
+        <section>
+            <h2>📋 功能特性</h2>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h4>🐍 蛇的控制</h4>
+                    <p>使用键盘方向键控制蛇的移动方向，支持上下左右四个方向</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🎯 食物系统</h4>
+                    <p>随机生成红色食物，蛇吃到后长度增加并获得分数</p>
+                </div>
+                <div class="feature-item">
+                    <h4>💥 碰撞检测</h4>
+                    <p>检测撞墙和撞自己两种游戏结束情况</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📊 分数显示</h4>
+                    <p>实时显示当前分数，游戏结束后弹出最终得分</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>🎮 试玩版本A</h2>
+            <div class="game-preview">
+                <a href="game_a.html" class="play-btn">🎮 点击试玩版本A</a>
+            </div>
+            <p>版本A是一个最小可行产品，包含了贪吃蛇游戏最核心的功能。通过这个版本，我们可以验证基本的游戏机制是否可行。</p>
+        </section>
+
+        <section>
+            <h2>💻 核心代码实现</h2>
+
+            <h3>1. 游戏配置</h3>
+            <div class="code-block">
+<pre><span class="comment">// 游戏画布和上下文</span>
+<span class="keyword">const</span> canvas = document.<span class="function">getElementById</span>(<span class="string">'gameCanvas'</span>);
+<span class="keyword">const</span> ctx = canvas.<span class="function">getContext</span>(<span class="string">'2d'</span>);
+
+<span class="comment">// 游戏网格配置</span>
+<span class="keyword">const</span> gridSize = <span class="string">20</span>;  <span class="comment">// 每个格子的大小</span>
+<span class="keyword">const</span> tileCount = <span class="string">20</span>;  <span class="comment">// 格子数量（20x20）</span></pre>
+            </div>
+
+            <h3>2. 蛇的移动逻辑</h3>
+            <div class="code-block">
+<pre><span class="keyword">function</span> <span class="function">moveSnake</span>() {
+    <span class="comment">// 计算新的蛇头位置</span>
+    <span class="keyword">const</span> head = {
+        x: snake[<span class="string">0</span>].x + dx, 
+        y: snake[<span class="string">0</span>].y + dy
+    };
+    
+    <span class="comment">// 将新头添加到蛇身最前面</span>
+    snake.<span class="function">unshift</span>(head);
+    
+    <span class="comment">// 移除蛇尾（保持长度不变）</span>
+    snake.<span class="function">pop</span>();
+}</pre>
+            </div>
+
+            <h3>3. 碰撞检测</h3>
+            <div class="code-block">
+<pre><span class="keyword">function</span> <span class="function">checkCollision</span>() {
+    <span class="keyword">const</span> head = snake[<span class="string">0</span>];
+    
+    <span class="comment">// 撞墙检测</span>
+    <span class="keyword">if</span> (head.x < <span class="string">0</span> || head.x >= tileCount || 
+        head.y < <span class="string">0</span> || head.y >= tileCount) {
+        <span class="function">gameOver</span>();
+    }
+    
+    <span class="comment">// 撞自己检测</span>
+    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="string">1</span>; i < snake.length; i++) {
+        <span class="keyword">if</span> (head.x === snake[i].x && head.y === snake[i].y) {
+            <span class="function">gameOver</span>();
+        }
+    }
+}</pre>
+            </div>
+
+            <h3>4. 键盘控制</h3>
+            <div class="code-block">
+<pre><span class="keyword">function</span> <span class="function">changeDirection</span>(event) {
+    <span class="keyword">const</span> keyPressed = event.keyCode;
+    
+    <span class="comment">// 防止反向移动</span>
+    <span class="keyword">if</span> (keyPressed === LEFT_KEY && !goingRight) {
+        dx = -<span class="string">1</span>;
+        dy = <span class="string">0</span>;
+    }
+    <span class="keyword">if</span> (keyPressed === UP_KEY && !goingDown) {
+        dx = <span class="string">0</span>;
+        dy = -<span class="string">1</span>;
+    }
+    <span class="comment">// ... 其他方向</span>
+}</pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>🔧 技术要点</h2>
+            <ul>
+                <li><strong>单向链表结构</strong>：使用数组表示蛇身，索引0为蛇头</li>
+                <li><strong>网格系统</strong>：将画布划分为20x20的网格，蛇和食物都只能在网格点上</li>
+                <li><strong>游戏循环</strong>：使用setTimeout实现定时刷新</li>
+                <li><strong>防反向移动</strong>：通过判断当前移动方向来禁止反向操作</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>📈 下一步改进</h2>
+            <p>版本A作为基础版本，还有一些可以优化的地方：</p>
+            <ul>
+                <li>添加开始、暂停、重新开始按钮</li>
+                <li>美化界面（CSS样式）</li>
+                <li>增加游戏音效</li>
+                <li>添加最高分记录</li>
+                <li>实现无限地图模式</li>
+            </ul>
+            <p>这些改进将在 <a href="version_b.html" class="back-link">版本B</a> 中实现。</p>
+        </section>
+
+        <div class="footer">
+            <p>📚 贪吃蛇游戏开发文档 | <a href="index.html" class="back-link">返回主文档</a></p>
+        </div>
+    </div>
+</body>
+</html>
